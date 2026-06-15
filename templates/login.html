@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Connexion — Système IA ENSA</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#1A56A0;--blue-mid:#2E75B6;--accent:#00C4B4;--bg:#060E1A;--surface:#0D1E35;--surface2:#132540;--border:#1E3A5F;--text:#E8F0F8;--text-dim:#7A9BBD;--text-muted:#3D6080;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.bg{position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 50%,rgba(26,86,160,0.15) 0%,transparent 60%),radial-gradient(ellipse 60% 80% at 80% 30%,rgba(0,196,180,0.08) 0%,transparent 60%);z-index:0;}
+.grid{position:fixed;inset:0;background-image:linear-gradient(rgba(46,117,182,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(46,117,182,0.04) 1px,transparent 1px);background-size:60px 60px;z-index:0;}
+.wrap{position:relative;z-index:10;width:100%;max-width:440px;padding:1.5rem;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2.5rem;box-shadow:0 32px 80px rgba(0,0,0,0.6);}
+.logo{text-align:center;margin-bottom:1.8rem;}
+.logo-icon{width:68px;height:68px;background:linear-gradient(135deg,var(--blue),var(--accent));border-radius:18px;display:inline-flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:1rem;box-shadow:0 8px 32px rgba(26,86,160,0.4);}
+.logo h1{font-size:1.3rem;font-weight:700;color:var(--text);}
+.logo p{font-size:0.8rem;color:var(--text-dim);margin-top:0.25rem;}
+/* FIX : notice dans son cadre */
+.rgpd-notice{background:rgba(26,86,160,0.12);border:1px solid rgba(46,117,182,0.3);border-radius:10px;padding:0.75rem 1rem;margin-bottom:1.5rem;font-size:0.79rem;color:var(--text-dim);display:flex;gap:0.5rem;line-height:1.5;overflow:hidden;}
+.rgpd-notice span{flex-shrink:0;}
+.rgpd-notice p{word-break:break-word;}
+.form-group{margin-bottom:1rem;}
+label{display:block;font-size:0.78rem;font-weight:700;color:var(--text-dim);margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:0.04em;}
+input{width:100%;padding:0.72rem 1rem;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.93rem;outline:none;transition:border-color 0.2s;}
+input:focus{border-color:#2E75B6;box-shadow:0 0 0 3px rgba(46,117,182,0.15);}
+input::placeholder{color:var(--text-muted);}
+.btn{width:100%;padding:0.82rem;background:linear-gradient(135deg,var(--blue),var(--blue-mid));color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:0.5rem;transition:opacity 0.2s,transform 0.1s;}
+.btn:hover{opacity:0.9;transform:translateY(-1px);}
+.err{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:0.65rem 1rem;font-size:0.83rem;color:#FCA5A5;margin-bottom:1rem;display:flex;gap:0.5rem;}
+.link{text-align:center;margin-top:1rem;font-size:0.83rem;color:var(--text-dim);}
+.link a{color:#5B9FD4;text-decoration:none;font-weight:500;}
+.demo{text-align:center;margin-top:0.6rem;font-size:0.72rem;color:var(--text-muted);font-family:'DM Mono',monospace;}
+</style>
+</head>
+<body>
+<div class="bg"></div><div class="grid"></div>
+<div class="wrap">
+  <div class="card">
+    <div class="logo">
+      <div class="logo-icon">🤖</div>
+      <h1>Système IA — ENSA Béni Mellal</h1>
+      <p>Assistant pédagogique intelligent · 2024–2025</p>
+    </div>
+    <div class="rgpd-notice">
+      <span>🔒</span>
+      <p>Vos identifiants sont hachés SHA-256. Les accès sont journalisés (Art. 5.2 RGPD). Aucun mot de passe stocké en clair (Art. 32 RGPD).</p>
+    </div>
+    {% if error %}<div class="err"><span>⚠️</span>{{ error }}</div>{% endif %}
+    <form method="POST">
+      <div class="form-group">
+        <label>Identifiant</label>
+        <input type="text" name="username" placeholder="Votre identifiant ENSA" required autofocus>
+      </div>
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input type="password" name="password" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn">🔐 Se connecter</button>
+    </form>
+    <div class="link">Pas de compte ? <a href="/register">Créer un compte</a></div>
+    <div class="demo">admin / Admin@ENSA2025!</div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inscription — Système IA ENSA</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#1A56A0;--blue-mid:#2E75B6;--accent:#00C4B4;--bg:#060E1A;--surface:#0D1E35;--surface2:#132540;--border:#1E3A5F;--text:#E8F0F8;--text-dim:#7A9BBD;--text-muted:#3D6080;--green:#22C55E;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem 1rem;}
+.bg{position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 50%,rgba(26,86,160,0.12) 0%,transparent 60%);z-index:0;}
+.wrap{position:relative;z-index:10;width:100%;max-width:520px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2rem;box-shadow:0 24px 60px rgba(0,0,0,0.5);}
+.logo{text-align:center;margin-bottom:1.5rem;}
+.logo-icon{width:56px;height:56px;background:linear-gradient(135deg,var(--blue),var(--accent));border-radius:14px;display:inline-flex;align-items:center;justify-content:center;font-size:1.7rem;margin-bottom:0.7rem;}
+.logo h1{font-size:1.2rem;font-weight:700;}
+.logo p{font-size:0.8rem;color:var(--text-dim);}
+/* Séparateur rôles */
+.role-section{margin-bottom:1.2rem;}
+.role-label-main{font-size:0.78rem;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.5rem;display:block;}
+.role-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem;}
+.role-card{border:2px solid var(--border);border-radius:10px;padding:0.7rem 0.5rem;text-align:center;cursor:pointer;transition:all 0.15s;position:relative;}
+.role-card input{position:absolute;opacity:0;width:0;height:0;}
+.role-card:hover{border-color:var(--blue-mid);}
+.role-card.selected-etudiant{border-color:#5B9FD4;background:rgba(91,159,212,0.1);}
+.role-card.selected-prof{border-color:#F59E0B;background:rgba(245,158,11,0.1);}
+.role-card.selected-admin_ecole{border-color:#A78BFA;background:rgba(167,139,250,0.1);}
+.role-icon{font-size:1.4rem;display:block;margin-bottom:0.3rem;}
+.role-name{font-size:0.78rem;font-weight:600;color:var(--text);}
+.role-desc{font-size:0.68rem;color:var(--text-muted);margin-top:0.15rem;}
+/* Champs conditionnels */
+.cond{display:none;}
+.cond.visible{display:block;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
+.form-group{margin-bottom:0.9rem;}
+label{display:block;font-size:0.78rem;font-weight:700;color:var(--text-dim);margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:0.04em;}
+input,select{width:100%;padding:0.68rem 0.9rem;background:var(--surface2);border:1.5px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;}
+input:focus,select:focus{border-color:#2E75B6;box-shadow:0 0 0 3px rgba(46,117,182,0.15);}
+input::placeholder{color:var(--text-muted);}
+select option{background:var(--surface2);}
+.divider{height:1px;background:var(--border);margin:1rem 0;}
+.btn{width:100%;padding:0.8rem;background:linear-gradient(135deg,var(--blue),var(--blue-mid));color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.93rem;font-weight:700;cursor:pointer;transition:opacity 0.2s;}
+.btn:hover{opacity:0.9;}
+.err{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:0.6rem 0.9rem;font-size:0.82rem;color:#FCA5A5;margin-bottom:0.9rem;display:flex;gap:0.5rem;}
+.link{text-align:center;margin-top:0.9rem;font-size:0.83rem;color:var(--text-dim);}
+.link a{color:#5B9FD4;text-decoration:none;font-weight:500;}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="wrap">
+  <div class="card">
+    <div class="logo">
+      <div class="logo-icon">📝</div>
+      <h1>Créer un compte</h1>
+      <p>Système IA ENSA Béni Mellal</p>
+    </div>
+    {% if error %}<div class="err"><span>⚠️</span>{{ error }}</div>{% endif %}
+    <form method="POST" id="regForm">
+      <div class="role-section">
+        <span class="role-label-main">Votre profil à l'ENSA</span>
+        <div class="role-grid">
+          <label class="role-card" id="card-etudiant" onclick="selectRole('etudiant')">
+            <input type="radio" name="role" value="etudiant" checked>
+            <span class="role-icon">🎓</span>
+            <span class="role-name">Étudiant(e)</span>
+            <span class="role-desc">Formations ENSA</span>
+          </label>
+          <label class="role-card" id="card-prof" onclick="selectRole('prof')">
+            <input type="radio" name="role" value="prof">
+            <span class="role-icon">👨‍🏫</span>
+            <span class="role-name">Enseignant(e)</span>
+            <span class="role-desc">Corps professoral</span>
+          </label>
+          <label class="role-card" id="card-admin_ecole" onclick="selectRole('admin_ecole')">
+            <input type="radio" name="role" value="admin_ecole">
+            <span class="role-icon">🏛️</span>
+            <span class="role-name">Personnel admin.</span>
+            <span class="role-desc">Services ENSA</span>
+          </label>
+        </div>
+      </div>
+      <!-- Champs étudiant -->
+      <div class="cond visible" id="cond-etudiant">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Filière</label>
+            <select name="filiere">
+              <option value="">-- Sélectionner --</option>
+              <option>Génie Informatique</option>
+              <option>IA & Cybersécurité</option>
+              <option>Génie Civil</option>
+              <option>Génie Électrique</option>
+              <option>Génie Industriel</option>
+              <option>Génie Mécanique</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Niveau</label>
+            <select name="niveau">
+              <option value="">-- Sélectionner --</option>
+              <option>1ère année</option>
+              <option>2ème année</option>
+              <option>3ème année (LP)</option>
+              <option>4ème année (Master 1)</option>
+              <option>5ème année (Master 2)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <!-- Champs prof -->
+      <div class="cond" id="cond-prof">
+        <div class="form-group">
+          <label>Département / Spécialité</label>
+          <select name="filiere">
+            <option value="">-- Sélectionner --</option>
+            <option>Informatique</option>
+            <option>Mathématiques</option>
+            <option>Physique</option>
+            <option>Génie Civil</option>
+            <option>Génie Électrique</option>
+            <option>Sciences Humaines</option>
+            <option>Autre</option>
+          </select>
+        </div>
+      </div>
+      <!-- Champs admin -->
+      <div class="cond" id="cond-admin_ecole">
+        <div class="form-group">
+          <label>Service</label>
+          <select name="filiere">
+            <option value="">-- Sélectionner --</option>
+            <option>Scolarité</option>
+            <option>Ressources humaines</option>
+            <option>Direction</option>
+            <option>Bibliothèque</option>
+            <option>Informatique / DSI</option>
+            <option>Autre</option>
+          </select>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="form-group">
+        <label>Identifiant de connexion</label>
+        <input type="text" name="username" placeholder="Minimum 3 caractères" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input type="password" name="password" placeholder="Min. 8 caractères" required>
+        </div>
+        <div class="form-group">
+          <label>Confirmer</label>
+          <input type="password" name="password_confirm" placeholder="Répéter" required>
+        </div>
+      </div>
+      <button type="submit" class="btn">✅ Créer mon compte</button>
+    </form>
+    <div class="link"><a href="/login">← Retour à la connexion</a></div>
+  </div>
+</div>
+<script>
+let cur = 'etudiant';
+function selectRole(r) {
+  document.getElementById('card-'+cur).className='role-card';
+  document.getElementById('cond-'+cur).className='cond';
+  cur = r;
+  document.getElementById('card-'+r).className='role-card selected-'+r;
+  document.getElementById('cond-'+r).className='cond visible';
+  document.querySelectorAll('input[name=role]').forEach(i => i.checked = i.value === r);
+}
+selectRole('etudiant');
+</script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Politique d'utilisation — Système IA ENSA</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0F2744;--blue:#1A56A0;--blue-mid:#2E75B6;--accent:#00C4B4;--bg:#060E1A;--surface:#0D1E35;--surface2:#132540;--border:#1E3A5F;--text:#E8F0F8;--text-dim:#7A9BBD;--text-muted:#3D6080;--green:#22C55E;--red:#EF4444;--yellow:#F59E0B;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem 1rem;}
+.bg-canvas{position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 50%,rgba(26,86,160,0.12) 0%,transparent 60%);z-index:0;}
+.consent-wrap{position:relative;z-index:10;width:100%;max-width:760px;}
+
+.header{text-align:center;margin-bottom:1.8rem;}
+.header-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(26,86,160,0.2);border:1px solid rgba(46,117,182,0.4);border-radius:30px;padding:0.4rem 1rem;font-size:0.8rem;color:var(--text-dim);margin-bottom:1rem;}
+.header h1{font-size:1.8rem;font-weight:700;letter-spacing:-0.03em;color:var(--text);}
+.header p{color:var(--text-dim);margin-top:0.4rem;}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.5);}
+
+/* Progress scroll indicator */
+.scroll-bar{height:3px;background:var(--surface2);}
+.scroll-progress{height:100%;background:linear-gradient(90deg,var(--blue),var(--accent));width:0%;transition:width 0.1s;}
+
+.policy-scroll{max-height:480px;overflow-y:auto;padding:2rem;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.policy-scroll::-webkit-scrollbar{width:5px;}
+.policy-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* Sections */
+.section{margin-bottom:1.8rem;}
+.section-title{font-size:0.95rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.8rem;display:flex;align-items:center;gap:0.5rem;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* Info boxes */
+.info-box{background:rgba(26,86,160,0.12);border:1px solid rgba(46,117,182,0.25);border-radius:10px;padding:0.9rem 1.1rem;font-size:0.85rem;color:var(--text-dim);line-height:1.7;margin-bottom:1rem;}
+.warn-box{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:10px;padding:0.9rem 1.1rem;font-size:0.85rem;color:#FCA5A5;line-height:1.7;margin-bottom:1rem;}
+.ok-box{background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.25);border-radius:10px;padding:0.9rem 1.1rem;font-size:0.85rem;color:#86EFAC;line-height:1.7;margin-bottom:1rem;}
+
+/* Table */
+.policy-table{width:100%;border-collapse:collapse;font-size:0.82rem;margin-bottom:1rem;}
+.policy-table th{background:rgba(26,86,160,0.2);color:var(--text-dim);padding:0.5rem 0.8rem;text-align:left;font-weight:600;letter-spacing:0.03em;}
+.policy-table td{padding:0.5rem 0.8rem;border-bottom:1px solid rgba(30,58,95,0.5);color:var(--text);}
+.policy-table tr:last-child td{border-bottom:none;}
+.badge-g{background:rgba(34,197,94,0.15);color:#86EFAC;padding:0.15rem 0.5rem;border-radius:20px;font-size:0.75rem;}
+.badge-r{background:rgba(239,68,68,0.15);color:#FCA5A5;padding:0.15rem 0.5rem;border-radius:20px;font-size:0.75rem;}
+.badge-y{background:rgba(245,158,11,0.15);color:#FDE68A;padding:0.15rem 0.5rem;border-radius:20px;font-size:0.75rem;}
+
+/* Conformité checklist */
+.conf-item{display:flex;gap:0.75rem;align-items:flex-start;padding:0.6rem 0;border-bottom:1px solid var(--border);}
+.conf-item:last-child{border-bottom:none;}
+.conf-check{width:22px;height:22px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.75rem;color:#86EFAC;}
+.conf-text{font-size:0.85rem;color:var(--text-dim);line-height:1.5;}
+.conf-text strong{color:var(--text);}
+
+/* Accept zone */
+.accept-zone{padding:1.5rem 2rem;border-top:1px solid var(--border);background:rgba(0,0,0,0.2);}
+.read-warning{text-align:center;font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:0.4rem;}
+.read-warning.done{color:var(--green);}
+
+.checkboxes{display:flex;flex-direction:column;gap:0.65rem;margin-bottom:1.2rem;}
+.check-item{display:flex;gap:0.75rem;align-items:flex-start;cursor:pointer;}
+.check-item input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent);margin-top:2px;cursor:pointer;}
+.check-item span{font-size:0.85rem;color:var(--text-dim);line-height:1.5;}
+
+.btn-accept{width:100%;padding:0.9rem;background:linear-gradient(135deg,#16A34A,#22C55E);color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:opacity 0.2s,transform 0.15s;letter-spacing:-0.01em;}
+.btn-accept:hover:not(:disabled){opacity:0.92;transform:translateY(-1px);}
+.btn-accept:disabled{opacity:0.4;cursor:not-allowed;}
+.btn-refuse{width:100%;padding:0.7rem;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;margin-top:0.6rem;transition:border-color 0.2s;}
+.btn-refuse:hover{border-color:#EF4444;color:#FCA5A5;}
+</style>
+</head>
+<body>
+<div class="bg-canvas"></div>
+<div class="consent-wrap">
+
+  <div class="header">
+    <div class="header-badge">⚖️ Consentement obligatoire — Art. 6.1.a RGPD</div>
+    <h1>Politique d'Utilisation</h1>
+    <p>Lisez intégralement avant d'accéder au système IA de l'ENSA Béni Mellal</p>
+  </div>
+
+  <div class="card">
+    <div class="scroll-bar"><div class="scroll-progress" id="scrollProgress"></div></div>
+
+    <div class="policy-scroll" id="policyScroll">
+
+      <!-- SECTION 1 -->
+      <div class="section">
+        <div class="section-title">01 · Présentation du système</div>
+        <div class="info-box">
+          Ce système est un <strong>outil pédagogique d'assistance IA</strong> développé à l'ENSA Béni Mellal dans le cadre du module Éthique & Droit du Numérique (Pr. TOUIL). Il permet aux étudiants et au personnel d'obtenir une aide académique automatisée dans un cadre strictement conforme au RGPD.
+        </div>
+      </div>
+
+      <!-- SECTION 2 — Fonctionnalités -->
+      <div class="section">
+        <div class="section-title">02 · Fonctionnalités disponibles</div>
+        <table class="policy-table">
+          <tr><th>Fonctionnalité</th><th>Description</th><th>Régime</th></tr>
+          <tr><td>💬 Réponses aux questions</td><td>Questions académiques, techniques, scientifiques</td><td><span class="badge-g">Régime 1 — Direct</span></td></tr>
+          <tr><td>📝 Génération de contenus</td><td>Rédaction de textes, explications automatiques</td><td><span class="badge-g">Régime 1 — Direct</span></td></tr>
+          <tr><td>📄 Résumé de documents</td><td>Synthèse de textes non sensibles</td><td><span class="badge-g">Régime 1 — Direct</span></td></tr>
+          <tr><td>✏️ Aide à la rédaction</td><td>Correction, amélioration stylistique</td><td><span class="badge-g">Régime 1 — Direct</span></td></tr>
+          <tr><td>🎯 Assistance à la décision</td><td>Aide à l'orientation, suggestions pédagogiques</td><td><span class="badge-r">Régime 2 — Validation humaine</span></td></tr>
+        </table>
+        <div class="warn-box">
+          ⚠️ <strong>Régime 2 (Art. 22 RGPD) :</strong> Toute assistance à la décision académique impactante (orientation, évaluation) suit un circuit de validation humaine obligatoire en 3 étapes avant communication. La suggestion IA n'est jamais transmise directement.
+        </div>
+      </div>
+
+      <!-- SECTION 3 — Données -->
+      <div class="section">
+        <div class="section-title">03 · Données collectées & durées de conservation</div>
+        <table class="policy-table">
+          <tr><th>Donnée</th><th>Finalité</th><th>Conservation</th></tr>
+          <tr><td>Identifiant pseudonymisé</td><td>Authentification</td><td>Durée de la relation</td></tr>
+          <tr><td>Historique des conversations</td><td>Service + droit d'accès Art. 15</td><td><strong>24 mois</strong> puis purge auto</td></tr>
+          <tr><td>Journaux d'audit (logs)</td><td>Sécurité & accountability Art. 5.2</td><td><strong>12 mois</strong> puis purge auto</td></tr>
+          <tr><td>Enregistrement consentement</td><td>Preuve Art. 7 RGPD</td><td><strong>5 ans</strong></td></tr>
+        </table>
+        <div class="warn-box">
+          🚫 <strong>Données STRICTEMENT INTERDITES dans ce système :</strong> numéro d'identité nationale, adresse email, numéro de téléphone, date de naissance, données bancaires, données de santé, opinions politiques ou religieuses. Un <strong>filtrage automatique</strong> bloque leur saisie (Art. 5.1.c RGPD — minimisation).
+        </div>
+      </div>
+
+      <!-- SECTION 4 — Droits -->
+      <div class="section">
+        <div class="section-title">04 · Vos droits RGPD (Art. 15–22)</div>
+        <table class="policy-table">
+          <tr><th>Droit</th><th>Article</th><th>Comment l'exercer</th></tr>
+          <tr><td>Accès à vos données</td><td>Art. 15</td><td>Section "Mes droits" → Historique</td></tr>
+          <tr><td>Effacement</td><td>Art. 17</td><td>Section "Mes droits" → Supprimer</td></tr>
+          <tr><td>Portabilité</td><td>Art. 20</td><td>Section "Mes droits" → Exporter</td></tr>
+          <tr><td>Contestation décision IA</td><td>Art. 22</td><td>Section "Mes droits" → Contester</td></tr>
+          <tr><td>Opposition</td><td>Art. 21</td><td>Contact DPO — réponse sous 1 mois</td></tr>
+        </table>
+      </div>
+
+      <!-- SECTION 5 — Interdictions -->
+      <div class="section">
+        <div class="section-title">05 · Usages interdits & sanctions</div>
+        <div class="warn-box">
+          Les usages suivants sont <strong>formellement interdits</strong> :<br><br>
+          (1) Saisir des données personnelles ou sensibles · (2) Partager ses identifiants · (3) Tenter de contourner les filtres de sécurité · (4) Prendre une décision académique sans validation humaine · (5) Utiliser le système à des fins commerciales ou extérieures à l'ENSA · (6) Générer des contenus illicites ou discriminatoires
+        </div>
+        <table class="policy-table">
+          <tr><th>Niveau</th><th>Type de violation</th><th>Sanction</th></tr>
+          <tr><td><span class="badge-y">Mineur</span></td><td>Usage négligent</td><td>Avertissement + rappel formation</td></tr>
+          <tr><td><span class="badge-y">Modéré</span></td><td>Usage détourné, saisie accidentelle</td><td>Suspension 15 jours + entretien DPO</td></tr>
+          <tr><td><span class="badge-r">Grave</span></td><td>Exfiltration, contournement filtres</td><td>Suspension définitive + rapport</td></tr>
+          <tr><td><span class="badge-r">Critique</span></td><td>Violation délibérée RGPD, attaque</td><td>Procédure disciplinaire + CNDP</td></tr>
+        </table>
+      </div>
+
+      <!-- SECTION 6 — Conformité -->
+      <div class="section">
+        <div class="section-title">06 · Définition de conformité du système</div>
+        <div class="ok-box" style="padding:1rem;">
+          <div style="font-weight:700;margin-bottom:0.7rem;font-size:0.9rem;">Le système est conforme si :</div>
+          <div class="conf-item"><div class="conf-check">✓</div><div class="conf-text"><strong>(1) La politique est affichée et acceptée</strong> par tous les utilisateurs avant toute interaction</div></div>
+          <div class="conf-item"><div class="conf-check">✓</div><div class="conf-text"><strong>(2) Aucune donnée personnelle sensible n'est enregistrée</strong> — filtrage automatique actif (Art. 5.1.c)</div></div>
+          <div class="conf-item"><div class="conf-check">✓</div><div class="conf-text"><strong>(3) Toute décision académique impactante</strong> fait l'objet d'une validation humaine documentée (Art. 22)</div></div>
+          <div class="conf-item"><div class="conf-check">✓</div><div class="conf-text"><strong>(4) Les logs sont purgés</strong> selon le calendrier défini : 12 mois logs, 24 mois conversations</div></div>
+          <div class="conf-item"><div class="conf-check">✓</div><div class="conf-text"><strong>(5) Le DPO a été consulté</strong> et l'AIPD est réalisée avant tout déploiement (Art. 35)</div></div>
+        </div>
+      </div>
+
+    </div><!-- end policy-scroll -->
+
+    <!-- Accept zone -->
+    <div class="accept-zone">
+      <div class="read-warning" id="readWarning">
+        ↑ Faites défiler pour lire la politique complète avant d'accepter
+      </div>
+      <form method="POST">
+        <div class="checkboxes">
+          <label class="check-item">
+            <input type="checkbox" class="consent-cb" required>
+            <span>J'ai lu et j'accepte intégralement la <strong>Politique d'Utilisation</strong> du système IA de l'ENSA Béni Mellal</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" class="consent-cb" required>
+            <span>Je consens au traitement de mes données de connexion et requêtes à des fins pédagogiques <strong>(Art. 6.1.a RGPD)</strong></span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" class="consent-cb" required>
+            <span>Je m'engage à ne saisir <strong>aucune donnée personnelle sensible</strong> dans le système</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" class="consent-cb" required>
+            <span>J'ai été informé(e) des limites, risques et régimes de supervision du système IA</span>
+          </label>
+        </div>
+        <input type="hidden" name="consent" value="yes">
+        <button type="submit" class="btn-accept" id="btnAccept">
+          ✅ J'accepte — Accéder au système IA
+        </button>
+        <a href="/logout"><button type="button" class="btn-refuse">✗ Je refuse — Me déconnecter</button></a>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+const scroll = document.getElementById('policyScroll');
+const progress = document.getElementById('scrollProgress');
+const readWarning = document.getElementById('readWarning');
+let hasScrolled = false;
+
+scroll.addEventListener('scroll', () => {
+  const pct = (scroll.scrollTop / (scroll.scrollHeight - scroll.clientHeight)) * 100;
+  progress.style.width = Math.min(pct, 100) + '%';
+  if (pct > 85 && !hasScrolled) {
+    hasScrolled = true;
+    readWarning.textContent = '✅ Politique lue — vous pouvez maintenant accepter';
+    readWarning.classList.add('done');
+  }
+});
+</script>
+</body>
+</html>

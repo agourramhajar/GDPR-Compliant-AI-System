@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Administration — Système IA ENSA</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#1A56A0;--blue-mid:#2E75B6;--accent:#00C4B4;--bg:#060E1A;--surface:#0D1E35;--surface2:#132540;--border:#1E3A5F;--text:#E8F0F8;--text-dim:#7A9BBD;--text-muted:#3D6080;--green:#22C55E;--red:#EF4444;--yellow:#F59E0B;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.topbar{height:52px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.5rem;gap:1rem;}
+.topbar-brand{font-weight:700;font-size:0.97rem;}
+.topbar-nav{margin-left:auto;display:flex;gap:0.25rem;}
+.topbar-nav a{padding:0.35rem 0.75rem;border-radius:8px;font-size:0.82rem;color:var(--text-dim);text-decoration:none;}
+.topbar-nav a:hover,.topbar-nav a.active{background:rgba(26,86,160,0.2);color:var(--text);}
+.btn-logout{padding:0.32rem 0.75rem;border-radius:8px;font-size:0.78rem;color:#FCA5A5;border:1px solid rgba(239,68,68,0.25);background:rgba(239,68,68,0.06);text-decoration:none;}
+.main{max-width:1200px;margin:2rem auto;padding:0 1.5rem;}
+.page-title{font-size:1.4rem;font-weight:700;margin-bottom:1.5rem;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;margin-bottom:1.5rem;}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;border-top:3px solid var(--blue);}
+.stat.warn{border-top-color:var(--red);}
+.stat .num{font-size:1.8rem;font-weight:700;color:var(--accent);}
+.stat.warn .num{color:#FCA5A5;}
+.stat .lbl{font-size:0.78rem;color:var(--text-dim);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;margin-bottom:1.2rem;overflow:hidden;}
+.card-head{padding:0.9rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;font-weight:700;}
+.badge-r2{background:rgba(239,68,68,0.15);color:#FCA5A5;padding:0.15rem 0.5rem;border-radius:10px;font-size:0.7rem;font-weight:700;margin-left:auto;}
+table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+th{background:rgba(26,86,160,0.15);color:var(--text-dim);padding:0.55rem 1rem;text-align:left;font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.04em;}
+td{padding:0.6rem 1rem;border-bottom:1px solid rgba(30,58,95,0.4);color:var(--text);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+.badge{display:inline-block;padding:0.15rem 0.5rem;border-radius:10px;font-size:0.7rem;font-weight:700;}
+.bg-green{background:rgba(34,197,94,0.15);color:#86EFAC;}
+.bg-red{background:rgba(239,68,68,0.15);color:#FCA5A5;}
+.bg-blue{background:rgba(26,86,160,0.2);color:#5B9FD4;}
+.bg-yellow{background:rgba(245,158,11,0.15);color:#FDE68A;}
+.btn-validate{padding:0.3rem 0.7rem;background:rgba(34,197,94,0.15);color:#86EFAC;border:1px solid rgba(34,197,94,0.3);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:0.75rem;cursor:pointer;font-weight:600;}
+.btn-validate:hover{background:rgba(34,197,94,0.25);}
+.mono{font-family:'DM Mono',monospace;font-size:0.78rem;}
+.truncate{max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.r2-notice{background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:8px;padding:0.8rem 1rem;font-size:0.82rem;color:#FCA5A5;margin:0 1rem 1rem;}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-brand">🛡️ Administration — Système IA ENSA</div>
+  <nav class="topbar-nav">
+    <a href="/chat">💬 Chat</a>
+    <a href="/droits">⚖️ Droits</a>
+    <a href="/admin" class="active">🛡️ Admin</a>
+  </nav>
+  <a href="/logout" class="btn-logout">Déconnexion</a>
+</div>
+<div class="main">
+  <div class="page-title">🛡️ Tableau de bord administrateur</div>
+
+  <div class="stats-grid">
+    <div class="stat"><div class="num">{{ stats.users }}</div><div class="lbl">👥 Utilisateurs</div></div>
+    <div class="stat"><div class="num">{{ stats.messages }}</div><div class="lbl">💬 Messages totaux</div></div>
+    <div class="stat {% if stats.contestations > 0 %}warn{% endif %}"><div class="num">{{ stats.contestations }}</div><div class="lbl">⚠️ Contestations en cours</div></div>
+    <div class="stat {% if stats.regime2_pending > 0 %}warn{% endif %}"><div class="num">{{ stats.regime2_pending }}</div><div class="lbl">🔴 Régime 2 en attente</div></div>
+  </div>
+
+  <!-- Régime 2 — validations en attente -->
+  {% if regime2 %}
+  <div class="card">
+    <div class="card-head">🔴 Validations Régime 2 en attente <span class="badge-r2">Art. 22 RGPD — Action requise</span></div>
+    <div class="r2-notice">
+      Ces messages d'<strong>assistance à la décision académique</strong> nécessitent une validation humaine obligatoire avant d'être communiqués. Examinez et validez chaque suggestion. (Art. 22 RGPD — Circuit 3 étapes)
+    </div>
+    <table>
+      <tr><th>ID</th><th>Conversation</th><th>Contenu de la suggestion IA</th><th>Date</th><th>Action</th></tr>
+      {% for m in regime2 %}
+      <tr>
+        <td class="mono">#{{ m['id'] }}</td>
+        <td class="truncate">{{ m['title'] }}</td>
+        <td class="truncate">{{ m['content'][:120] }}…</td>
+        <td class="mono" style="white-space:nowrap;">{{ m['created_at'][:16] }}</td>
+        <td><button class="btn-validate" onclick="validateMsg({{ m['id'] }}, this)">✅ Valider</button></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% endif %}
+
+  <!-- Contestations -->
+  {% if pending %}
+  <div class="card">
+    <div class="card-head">⚠️ Contestations en cours (Art. 22 RGPD)</div>
+    <table>
+      <tr><th>Utilisateur</th><th>Motif</th><th>Date</th><th>Statut</th></tr>
+      {% for c in pending %}
+      <tr>
+        <td><span class="badge bg-blue">{{ c['username'] }}</span></td>
+        <td class="truncate">{{ c['motif'] }}</td>
+        <td class="mono">{{ c['created_at'][:16] }}</td>
+        <td><span class="badge bg-yellow">En cours</span></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% endif %}
+
+  <!-- Utilisateurs -->
+  <div class="card">
+    <div class="card-head">👥 Utilisateurs enregistrés</div>
+    <table>
+      <tr><th>ID</th><th>Identifiant</th><th>Rôle</th><th>Consentement</th><th>Inscription</th></tr>
+      {% for u in users %}
+      <tr>
+        <td class="mono">{{ u['id'] }}</td>
+        <td><strong>{{ u['username'] }}</strong></td>
+        <td><span class="badge {% if u['role']=='admin' %}bg-red{% elif u['role']=='personnel' %}bg-yellow{% else %}bg-blue{% endif %}">{{ u['role'] }}</span></td>
+        <td>{% if u['consent_given'] %}<span class="badge bg-green">✅ Accordé</span>{% else %}<span class="badge bg-yellow">⏳ En attente</span>{% endif %}</td>
+        <td class="mono">{{ u['created_at'][:16] }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <!-- Logs d'audit -->
+  <div class="card">
+    <div class="card-head">📋 Journal d'audit — 100 dernières actions <span style="margin-left:auto;font-size:0.72rem;color:var(--text-muted);font-weight:400;">Art. 5.2 RGPD — Accountability · Conservation 12 mois</span></div>
+    <table>
+      <tr><th>Horodatage</th><th>User ID</th><th>Action</th><th>Détail</th><th>IP</th></tr>
+      {% for log in logs %}
+      <tr>
+        <td class="mono" style="white-space:nowrap;">{{ log['timestamp'][:16] }}</td>
+        <td class="mono">{{ log['user_id'] or '—' }}</td>
+        <td><span class="badge {% if 'CONNEXION' in log['action'] and 'ECHEC' not in log['action'] %}bg-green{% elif 'ECHEC' in log['action'] or 'SENSIBLE' in log['action'] %}bg-red{% elif 'DROIT' in log['action'] or 'VALIDATION' in log['action'] %}bg-yellow{% else %}bg-blue{% endif %}">{{ log['action'] }}</span></td>
+        <td class="truncate" style="color:var(--text-dim);">{{ log['detail'] or '—' }}</td>
+        <td class="mono" style="color:var(--text-muted);">{{ log['ip_address'] or '—' }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+<script>
+async function validateMsg(id, btn) {
+  if (!confirm('Valider cette suggestion IA ? (Art. 22 RGPD — validation humaine documentée)')) return;
+  const res = await fetch('/admin/validate/' + id, {method:'POST'});
+  if (res.ok) {
+    btn.textContent = '✅ Validé';
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+  }
+}
+</script>
+</body>
+</html>
